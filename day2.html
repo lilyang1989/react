@@ -15,27 +15,40 @@
     <div id="test">
         
     </div>
-</body>
 <!-- 引入依赖 ,引入的时候，必须就按照这个步骤-->
-<script src="../js/react.development.js" type="text/javascript"></script>
-<script src="../js/react-dom.development.js" type="text/javascript"></script>
-
-<script src="../js/babel.min.js"></script>
+<script type="text/javascript"  src="../js/react.development.js" > </script>
+<script type="text/javascript"  src="../js/react-dom.development.js" > </script>
+<script type="text/javascript"    src="../js/babel.min.js"></script>
 <!--这里使用了js来创建虚拟DOM-->
 <script type="text/babel">
         const MyId = "title";
         const MyData = "yhq";
+		const data=['A','B','C']
+		const data2=[<li>A</li>,<li>B</li>,<li>C</li>]
+		/*
+		注意区分js语句与js表达式
+		表达式会产生一个值
+		语句（代码）：无法用变量来承接 
+		*/
         // 1.创建虚拟DOM
         const VDOM = (
+			<div>
             <h1>
                 前端框架列表
             </h1>
 			<ul>
-			<li>aaaaaaaaaaaaaa</li>
+			{ /*
+				遍历时列表里必须有一个唯一值key
+			*/
+				data.map((item,index)=>{
+					return <li key={index}>{item}</li>
+				})
+			}
 			</ul>
+			</div>
         )
         // 2.渲染，如果有多个渲染同一个容器，后面的会将前面的覆盖掉
-        ReactDOM.render(VDOM,document.getElementById('test'));
+        ReactDOM.render(VDOM,document.getElementById('test'))
 </script>
-
+</body>
 </html>
