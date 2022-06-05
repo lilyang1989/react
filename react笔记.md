@@ -63,5 +63,4 @@ components:记录组件组成 profiler：记录网站性能
 类中所定义的方法  都是放在原型对象中的 供实例对象去使用
 =======
 ### git TEST
-### git second test!
->>>>>>> 1bfddbc94d58a8264d1cd06c466942811b055883
+### git second test
