@@ -1,3 +1,9 @@
+需要用到的东西
+
+reacthooks webpack axa
+
+后缀可以写js也可以写jsx 
+
 ## 第一章 react入门
 
 * babel 能将jsx转成js
@@ -22,13 +28,17 @@
 
 3.样式的类名指定不要用class，要用classname
 
-4.内联样式。要用style={{key:value}}的形式去写
+4.内联样式。要用style={{key:value}}的形式去写，要有两个花括号
 
 5.只能有一个根标签，即剩下的必须嵌套在里面
 
-6.标签必须闭合
+6.标签必须闭合，不能缺少根元素，甚至用空标签都可以 
 
-7.标签首字母：
+7.标签首字母大写
+
+8.label要用htmlFor
+
+9.react中的列表循环有且只有map可以使用，因为只有map才有返回值
 
 ​										1）若小写开头 则将该标签转换为html中的同名元素，若无对应的同名元素则报错								
 
@@ -41,6 +51,10 @@ ipad测试
 模块：提供特定功能的js程序 一般就是一个js文件
 
 组件：用来实现局部功能效果的代码和资源的集合
+
+rcc-react class component
+
+rfc-reactt function component
 
 
 
@@ -61,6 +75,5 @@ components:记录组件组成 profiler：记录网站性能
 若A类继承了B类 且A中写了构造器 那么A类构造器中的super是必须要调用的
 
 类中所定义的方法  都是放在原型对象中的 供实例对象去使用
-=======
-### git TEST
-### git second test
+
+### 
