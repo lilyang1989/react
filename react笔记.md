@@ -1,10 +1,10 @@
 需要用到的东西
 
-reacthooks webpack axa
+reacthooks webpack axaj
 
 后缀可以写js也可以写jsx 
 
-## 第一章 react入门
+## 第一章 一些前置知识
 
 * babel 能将jsx转成js
 
@@ -85,14 +85,135 @@ components:记录组件组成 profiler：记录网站性能
 
 函数式组件没有生命周期
 
-函数式组价没有this
+函数式组件没有this
 
 函数式组件没有state状态
 
-### Hooks
+### 第三章 React Hooks
 
-只修改变量如果没有更新视图仍然不能在界面上有所体现-
+只修改变量如果没有更新视图仍然不能在界面上有所体现
 
 hook只能用在组件函数的最顶层 
 
+#### 3.1 useState
+
+函数组件没有state，无法通过setState来更新视图。
+
+在react包中导入useState钩子，然后在组件函数的顶部调用useState（）
+
+#### 3.11读取状态
+
+被调用时，返回一个数组，第一项是一个状态值
+
+```jsx
+const stateArray = useState(false);
+stateArray[0]; // => 状态值
+```
+
+一般通过数组解构提取到变量上。
+
+第二项是一个更新状态的函数，用来更新第一项。
+
+```jsx
+const [state, setState] = useState(initialState);
+setState(newState);
+```
+
+调用更新器后将重新渲染，使新状态变为当前状态。
+
+#### 3.12一些注意事项
+
+* 仅能在顶层调用Hook（不能在循环条件嵌套函数中调用），多个useState()调用中，渲染之间的调用顺序必须相同
+* 仅在函数组件或自定义钩子内部调用useState（）
+* 在单个组件中可以用多个状态，调用多次useState()
+
+#### 3.13 复杂状态管理&useReducer（）
+
+>官方提供的两种状态管理的hook：useState和useReducer.
+>
+>没有useReducer也能完成正常开发，但使用它可以让代码具有更好的可读性、可维护性、可预测性
+
+#### 什么是reducer
+
+>是一个函数（state,action）=>newState
+>
+>接受当前应用的state和动作action，计算并返回最新的state
+
+例：计算器reducer
+
+```jsx
+ // 计算器reducer，根据state（当前状态）和action（触发的动作加、减）参数，计算返回newState
+    function countReducer(state, action) {
+        switch(action.type) {
+            case 'add':
+                return state + 1;
+            case 'sub':
+                return state - 1;
+            default: 
+                return state;
+        }
+    }
+```
+
+#### reducer的幂等性
+
+本质上是一个纯函数，相同的输入无论执行多少遍都会返回相同的输出（newState）
+
+#### state和newState的理解
+
+当state是一个复杂的js对象时：
+```jsx
+  // 返回一个 newState (newObject)
+    function countReducer(state, action) {
+        switch(action.type) {
+            case 'add':
+                return { ...state, count: state.count + 1; }
+            case 'sub':
+                return { ...state, count: state.count - 1; }
+            default: 
+                return count;
+        }
+    }
+
+```
+
+1.处理的state对象必须是immutable，永远不要直接修改参数中的state对象的值而是返回一个新的state object;
+
+2.
+
+reducer是一个利用action提供的信息将state从A转换到B的一个纯函数：
+
+* 语法： (state, action) => newState
+* Immutable：每次都返回一个newState， 永远不要直接修改state对象
+* Action：一个常规的Action对象通常有type和payload（可选）组成
+  * type： 本次操作的类型，也是 reducer 条件判断的依据
+  * payload： 提供操作附带的数据信息
+
+
+
+对于复杂的状态管理，可以使用useReducer()hook,将reducer提取到一个单独的模块中，并在其他组件中重用它。
+
+```jsx
+const [state, dispatch] = useReducer(reducer, initState);
+```
+
+
+
+### 第四章 React-Redux
+
+Redux三大核心概念:
+
+* Action
+* Reducer
+* Store
+
+### Why is a Redux reducer called a reducer?
+
+>It's called a reducer because it's the type of function you would pass to [Array.prototype.reduce(reducer, ?initialValue)](https://link.zhihu.com/?target=https%3A//developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce)
+
+redux当中的reducer之所以被叫做reducer，是因为它与Array.prototype.reduce当中传入的回调函数非常相似
+
 ### 跳转某个页面并携带参数
+
+### 第五章 提供器与连接器
+
