@@ -22,11 +22,27 @@ reacthooks webpack ajax
 
 ### 点击输入框
 
-1.查空
+1.查空，判断inputValue是否等于0
 
 2.输入要干的事情inputValue
 
-3.点击右边的新增，调用addItem把inputValue传进去
+3.点击右边的新增，调用addItem把inputValue传进去，通过addItem父子传值
+
+4.todoList是一个数组，放入新的数组就会更新
+
+5.addItem包含dataItem和settodoList和setInputShow
+
+dataItem包含id content  completed。
+
+settodoList把todoList和dateItem合并在一起
+
+6.点击添加 要隐藏输入框 通过setInputShow置为false
+
+### 列表项
+
+1. 判断是否完成此待办事项,即checked还是非checked，通过data.completed来 判断
+2. 如果已完成，在textDecoration里面加上line-through
+3. 
 
 # 第一章 一些前置知识
 
