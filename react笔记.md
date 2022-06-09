@@ -1,6 +1,16 @@
-需要用到的东西
+标签很多属性
 
-reacthooks webpack ajax   
+## 我看了啥
+
+
+
+以及很多小视频
+
+## 我用到了什么
+
+ant-design  react-hooks  yarn
+
+需要用到的东西 webpack ajax   
 
 后缀可以写js也可以写jsx 
 
@@ -8,7 +18,7 @@ reacthooks webpack ajax
 
 关于ant design--在create react app中使用
 
-### 组件梳理
+### 业务（？）逻辑梳理
 
 最大：app.js
 
@@ -46,6 +56,30 @@ settodoList把todoList和dateItem合并在一起
 4. div里放置三个button
 5. 放入app.js
 6. 在ul里进行map  
+
+### 数据存到localStorage里
+
+用useEffect
+
+1.从localstorage里用getItem取数据（todoData），将字符串转换为json对象，如果没有直接给一个空数组
+
+2.通过settoDoList把tododata放进去，让新的数据替换原来老的todoList的数据
+
+3.再写一个useEffect 使得当todoList变化时 localstorage存入todoData
+
+## 模态框组件model 插槽
+
+任何一个组件，先声明状态，是否显示？ isShowModal
+
+modal里面的类 inner
+
+model的标题m-header    里面嵌入modaltitle
+
+盒子content-wrapper里面放：
+
+model的内容：children 
+
+点击确定关闭框 closeModel
 
 # 第一章 一些前置知识
 
