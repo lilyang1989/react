@@ -112,6 +112,42 @@ components:记录组件组成 profiler：记录网站性能
 
 ![image-20220609203931805](C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220609203931805.png)
 
+#### Mounting—出生
+
+* constructor
+
+  先执行constructor里面的函数，初始化**数据**
+
+* render
+
+​	初始化数据之后，页面完成初次渲染
+
+* DidMount
+
+​	渲染完成后进行通知
+
+#### Updating—长大
+
+* render
+
+​	数据（new props）的更新引起视图的重新渲染
+
+* DidUpdate
+
+​	更新渲染完成后，进行通知
+
+#### Unmounting-寄
+
+* WillUnmount
+
+​	卸载阶段要做什么
+
+>为什么是Will而不是Did？
+>
+>只有在挂载的时候才能发出通知，相当于只有在活着的时候才能说话 
+
+
+
 ### 函数式组件
 
 创建函数式组件时 首字母必须大写 render方法的第一个参数写函数的同名标签，此处标签必须闭合，如果不习惯写自闭合可以写两个。
@@ -169,7 +205,7 @@ setState(newState);
 
 调用更新器后将重新渲染，使新状态变为当前状态。
 
-### 3.12一些注意事项
+### 3.12 一些注意事项
 
 * 仅能在顶层调用Hook（不能在循环条件嵌套函数中调用），多个useState()调用中，渲染之间的调用顺序必须相同
 * 仅在函数组件或自定义钩子内部调用useState（）
@@ -359,13 +395,40 @@ console.log(a)
 console.log(a())
 ```
 
-
-
 ### 3.4 useEffect
 
 ```jsx
+//通过使用这个hook 告诉react组价需要在渲染后执行某些操作
 useEffect(callback,array)
 ```
+
+**粗浅**理解：把生命周期的DidMount和DidUpdated做了一个简单的合并
+
+>不同点：
+>
+>***使用useEffect调度的effect不会阻塞浏览器更新屏幕，让应用看起来响应的更快***																												——React官网
+
+**每次渲染后都会执行**：在组件初次渲染时会执行，在组件完成更新时也会执行。
+
+为什么在**组件内部调用**：可以直接访问count state变量
+
+执行时间点：在**真实**DOM构建完成之后
+
+执行方式：**异步**
+
+>***如果你的effect返回一个函数，React将在执行清除操作时调用它***
+>
+>​																							-----React官网
+
+清理函数执行时机：在每一次运行副作用函数之前运行
+
+ 1.render+useEffect
+
+2.render+清理函数(杀死上一个useEffect)+useEffect
+
+3.render+清理函数(useEffect)+useEffect
+
+4.循环
 
 
 
@@ -393,6 +456,14 @@ useEffect(callback,array)
 
 即和外部变量的交互都需要用到副作用
 
+### 3.5 useContext
+
+### 3.6 LazyLoad
+
+### 3.7 Suspense
+
+
+
 ## 第四章 React-Redux
 
 Redux三大核心概念:
@@ -407,7 +478,10 @@ Redux三大核心概念:
 
 redux当中的reducer之所以被叫做reducer，是因为它与Array.prototype.reduce当中传入的回调函数非常相似
 
-## 跳转某个页面并携带参数
+### 跳转某个页面并携带参数
 
-## 第五章 提供器与连接器
+### 4.2 提供器与连接器
 
+### 4.3 ReactRedux流程图
+
+![img](https://tva1.sinaimg.cn/large/008eGmZEgy1gpp69hggimj30ya0i1tdp.jpg)
