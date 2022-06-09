@@ -42,7 +42,10 @@ settodoList把todoList和dateItem合并在一起
 
 1. 判断是否完成此待办事项,即checked还是非checked，通过data.completed来 判断
 2. 如果已完成，在textDecoration里面加上line-through
-3. 
+3. span里绑定data.content
+4. div里放置三个button
+5. 放入app.js
+6. 在ul里进行map  
 
 # 第一章 一些前置知识
 
@@ -102,6 +105,12 @@ rfc-reactt function component
 react开发者组件，如果网站未打包上线则是红色
 
 components:记录组件组成 profiler：记录网站性能
+
+## 生命周期
+
+> 组件从被创建到被销毁的过程。
+
+![image-20220609203931805](C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220609203931805.png)
 
 ### 函数式组件
 
@@ -352,7 +361,37 @@ console.log(a())
 
 
 
+### 3.4 useEffect
 
+```jsx
+useEffect(callback,array)
+```
+
+
+
+副作用：纯函数在引用外部变量或调用外部函数时
+
+在进行数据请求，检测数据更新，和垃圾回收时比较常用
+
+用来检测数据更新时
+
+>想监测哪一个更新就把这个变量写在数组中
+>
+> 当要检测页面中所有变量时 可以把所有变量都填写到数组中 也可以直接不写数组 即第二个参数
+>
+> 当不想检测页面中任何数据时  直接写一个空数组 即[ ]
+
+只要不是在组件渲染时用到的变量，所有的操作都是副作用
+
+使用场景：
+
+* 修改DOM
+* 修改全局变量
+* ajax请求
+* 计时器
+* 存储相关
+
+即和外部变量的交互都需要用到副作用
 
 ## 第四章 React-Redux
 
