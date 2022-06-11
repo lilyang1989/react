@@ -69,6 +69,10 @@ settodoList把todoList和dateItem合并在一起
 
 ## 模态框组件model 插槽
 
+先解构出：isShowModal,modalTitle,children
+
+
+
 任何一个组件，先声明状态，是否显示？ isShowModal
 
 modal里面的类 inner
