@@ -85,6 +85,32 @@ model的内容：children
 
 点击确定关闭框 closeModel
 
+
+
+## 关于提交数据
+
+
+
+## 完成与否与删除
+
+解构出 completedItem
+
+
+
+给checkBox加上这一属性
+
+再用usecallback
+
+#### 删除
+
+todoitem里解构出removeitem的
+
+
+
+
+
+组件化的特性就是通过属性去传递方法和数据
+
 # 第一章 一些前置知识
 
 * babel 能将jsx转成js
@@ -422,6 +448,8 @@ const doSth=useCallback(()=>{setNum(num=>num+1)
 与useState用法基本一致，但最后会返回一个函数，用一个变量保存起来。
 
 返回的函数a会根据b的变化而变化，如果b始终未发生变化，a也不会生成，避免在不必要的情况下更新
+
+情景：通过属性传递给子组件
 
 ```jsx
 const a = useCallback(() => {
