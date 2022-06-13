@@ -49,6 +49,25 @@
         )
         // 2.渲染，如果有多个渲染同一个容器，后面的会将前面的覆盖掉
         ReactDOM.render(VDOM,document.getElementById('test'))
+		class Person{
+			constructor(name,age) {
+			    this.name=name;
+				this.age=age;
+			}
+			//一般方法
+			speak(){
+				console.log(`我叫${this.name},年龄是${this.age}`)
+			}
+		}
+		class Student extends Person{
+			constructor(name,age,grade) {
+			    super(name,age);//必须放在最前
+				this.grade=grade;
+			}
+		}
+		class Myclass extends React.Compoment{
+			
+		}
 </script>
 </body>
 </html>
