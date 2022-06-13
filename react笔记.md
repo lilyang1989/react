@@ -551,3 +551,31 @@ redux当中的reducer之所以被叫做reducer，是因为它与Array.prototype.
 ### 4.3 ReactRedux流程图
 
 ![img](https://tva1.sinaimg.cn/large/008eGmZEgy1gpp69hggimj30ya0i1tdp.jpg)
+
+
+
+# 遇到的Bug（回忆版，原来写的老多忘保存...
+
+## 最长、最折磨
+
+![image-20220613164257182](C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220613164257182.png)
+
+todoList is not inheritale
+
+控制台反复提示这一行报错
+
+点击加号按钮后无法弹出列表项，反复检查代码和依赖路径后依然无法找到原因
+
+![image-20220613163700037](C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220613163700037.png)
+
+加到课程微信找到源码 一行一行比较后仍无法找到任何区别
+
+当时其他部件已经书写完毕，但第一遍写的过程中没有边写边运行，导致当时两种选择：
+
+1.先跳过此步，继续调试后面，看是否仍然会出现错误
+
+2.重新开一个DebugDemo,复现到做添加待办事项时的这一步
+
+再次开了一个demo并且再次安装好所有依赖和路径之后，做到这一步时神奇的事情发生了能正常添加列表项，但在编写三个功能组件时出了问题：
+
+当时已经写好了查看按钮功能，按理说点击后应该跳出详情页，但点击后无反应，也不报错;
