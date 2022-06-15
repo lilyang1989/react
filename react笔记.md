@@ -28,7 +28,7 @@ ant-design  react-hooks  yarn
 
 2.openInput通过触发setInputShow将是否设置输入框isInputShow设置为是,
 
-3.addInput函数一眼鉴定为isInputShow的值为true 展示输入框
+3.addInput函数查询为isInputShow的值为true 展示输入框
 
 ### 点击输入框
 
@@ -596,7 +596,7 @@ todoList is not inheritale
 
 正好用的是Chrome，思考会不会是梯子的原因？
 
-重新练了下网，发现能正常存储了，问题解决...
+重新连了下网，发现能正常存储了，问题解决...
 
 
 
