@@ -71,8 +71,6 @@ settodoList把todoList和dateItem合并在一起
 
 先解构出：isShowModal,modalTitle,children
 
-
-
 任何一个组件，先声明状态，是否显示？ isShowModal
 
 modal里面的类 inner
@@ -84,8 +82,6 @@ model的标题m-header    里面嵌入modaltitle
 model的内容：children 
 
 点击确定关闭框 closeModel
-
-
 
 ## 关于提交数据
 
@@ -104,8 +100,6 @@ model的内容：children
 #### 删除
 
 todoitem里解构出removeitem的
-
-
 
 
 
