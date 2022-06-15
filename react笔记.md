@@ -119,9 +119,9 @@ todoitem里解构出removeitem的
 
 * 标签内不能加单引号
 
+## 1.1 jsx语法糖：
 
-
-## jsx规则：
+> React的JSX创建出来的是虚拟DOM，而不是HTML
 
 1.定义虚拟DOM时，不要加引号
 
@@ -146,7 +146,7 @@ todoitem里解构出removeitem的
 ​										2）若大写开头 则找react的对应组件  没有定义则报错
 
 
-## 模块与组件化
+## 1.2 模块与组件化
 
 模块：提供特定功能的js程序 一般就是一个js文件
 
@@ -156,15 +156,23 @@ rcc-react class component
 
 rfc-reactt function component
 
+通过使用组件来提高耦合性，更易于维护
 
+定义组件分为3步：
 
-# 第二章 面向组件编程
+ 1、导入React核心模块
+
+ 2、定义组件类
+
+ 3、导出组件
+
+# 第二章 类组件ClassComponent
 
 react开发者组件，如果网站未打包上线则是红色
 
 components:记录组件组成 profiler：记录网站性能
 
-## 生命周期
+## 2.1 生命周期
 
 > 组件从被创建到被销毁的过程。
 
@@ -206,24 +214,40 @@ components:记录组件组成 profiler：记录网站性能
 
 
 
-### 函数式组件
+## 2.2 事件、state与setState
 
-创建函数式组件时 首字母必须大写 render方法的第一个参数写函数的同名标签，此处标签必须闭合，如果不习惯写自闭合可以写两个。
+把要更新的值都放在state里，更新数值用setState
 
-过程：react解析组件标签，找到相应组件，发现组件是用函数定义的，随后调用该函数，将返回的虚拟dom转为真实dom，随后呈现在界面上
+```jsx
+import React from 'react'
+
+export default function App2() {
+    state={
+        num:1
+    }
+  return (
+      <div>
+          <h2>数字为：{this.state.num}</h2>
+          <button onClick={()=>this.setState({num:this.state.num+1})}></button>
+      </div>
+  )
+}
+```
+
+
 
 ### 对类的复习
 
 若A类继承了B类 且A中写了构造器 那么A类构造器中的super是必须要调用的
 
 类中所定义的方法  都是放在原型对象中的 供实例对象去使用
-## setState的三种写法
+### setState的三种写法
 
-##  useState
+###  useState
 
 第一个参数，第二个放用来修改参数的方法
 
-## 函数式组件
+### 函数式组件
 
 函数式组件没有生命周期
 
@@ -231,13 +255,27 @@ components:记录组件组成 profiler：记录网站性能
 
 函数式组件没有state状态
 
-## 第三章 React Hooks
+
+
+## 2.3受控组件与不受控组件
+
+## 2.4 传值、父传子、子传父
+
+
+
+# 第三章 React Hooks
 
 只修改变量如果没有更新视图仍然不能在界面上有所体现
 
 hook只能用在组件函数的最顶层 
 
-### 3.1 useState
+### 函数式组件
+
+创建函数式组件时 首字母必须大写 render方法的第一个参数写函数的同名标签，此处标签必须闭合，如果不习惯写自闭合可以写两个。
+
+过程：react解析组件标签，找到相应组件，发现组件是用函数定义的，随后调用该函数，将返回的虚拟dom转为真实dom，随后呈现在界面上
+
+## 3.1 useState
 
 函数组件没有state，无法通过setState来更新视图。
 
@@ -275,7 +313,7 @@ setState(newState);
 >
 >没有useReducer也能完成正常开发，但使用它可以让代码具有更好的可读性、可维护性、可预测性
 
-###  什么是reducer
+#### 什么是reducer
 
 >是一个函数（state,action）=>newState
 >
@@ -297,11 +335,11 @@ setState(newState);
     }
 ```
 
-### reducer的幂等性
+#### reducer的幂等性
 
 本质上是一个纯函数，相同的输入无论执行多少遍都会返回相同的输出（newState）
 
-### state和newState的理解
+#### state和newState的理解
 
 当state是一个复杂的js对象时：
 ```jsx
@@ -323,7 +361,7 @@ setState(newState);
 
 2.因为reducer要求每次返回一个新的对象，可以用ES6中的解构赋值方式去创建一个新对象，并复写需要改变的state属性。
 
-### action理解
+#### action理解
 
 >action：用来表示触发的行为
 
@@ -354,7 +392,7 @@ reducer是一个利用action提供的信息将state从A转换到B的一个纯函
   * type： 本次操作的类型，也是 reducer 条件判断的依据
   * payload： 提供操作附带的数据信息
 
-### Wen Reducer?
+#### Wen Reducer?
 
 >当state是一个数组或对象，变化复杂，一个操作需要修改很多state的时候
 
@@ -426,9 +464,58 @@ function App5(){
 export default App5;
 ```
 
-## 3.3 useCallback与useMemo
+## 3.3 memo
+
+React 中当组件的 props 或 state 变化时，会重新渲染，实际开发会遇到不必要的渲染场景。
+
+父组件更新时，子组件被迫更新，会造成性能损耗，此时需要用memo来缓存子组件，避免被迫更新
+
+```jsx
+import React, {useState} from 'react'
+
+// 子组件
+function Sub(){
+    console.log('子组件被更新了')
+    return <div>子组件</div>
+}
+
+// 父组件
+export default function App(){
+    const [msg, setMsg] = useState("你好世界");
+    return (
+        <>
+            <h2>内容为：{msg}</h2>
+            <button onClick={()=>setMsg("Hello World")}>修改Msg</button>
+            <hr />
+            <Sub />
+        </>
+    )
+}
+
+```
+
+
+
+![子组件被迫更新](https://tva1.sinaimg.cn/large/e6c9d24egy1gzt1nekhxlg20gn04yqv5.gif)
+
+用memo包裹住子组件即可
+
+```jsx
+const Sub = memo(() => {
+    console.log('子组件被更新了')
+    return <div>子组件</div>
+})
+```
+
+注意，此处父组件只是简单调用子组件，并未给子组件传递任何属性
+
+### 如果父组件的某个属性给子组件通过props传了值呢？
+
+## 3.4 useCallback与useMemo
 
 >The `useCallback` and `useMemo` Hooks are similar. The main difference is that `useMemo` returns a memoized *value* and `useCallback` returns a memoized *function*. 
+
+一个返回值，一个返回函数。
 
 useCallback示例
 
@@ -437,7 +524,7 @@ const doSth=useCallback(()=>{setNum(num=>num+1)
   },[])//useCallback里丢进函数 第二个参数丢一个空数组代表不检测更新
 ```
 
-#### 3.31useCallback基础用法
+### 3.41useCallback基础用法
 
 与useState用法基本一致，但最后会返回一个函数，用一个变量保存起来。
 
@@ -455,7 +542,25 @@ console.log(a)
 console.log(a())
 ```
 
-### 3.4 useEffect
+* 第一种用法：父子组件函数式传参
+
+  子组件受到的参数不变（空数组），自然不会更新，从而减少了组件间不必要的更新
+
+### 3.42 useMemo
+
+与useCallback差不多，只是useMemo需要再套一个函数
+
+```jsx
+const mySetMsg = useCallback(() => setMsg(()=>"Hello World"), [])	
+//注意useMemo
+
+const mySetMsg = useMemo(()=>{
+  return () => setMsg("Hello World")
+}, [])
+
+```
+
+## 3.5 useEffect
 
 ```jsx
 //通过使用这个hook 告诉react组价需要在渲染后执行某些操作
@@ -516,15 +621,81 @@ useEffect(callback,array)
 
 即和外部变量的交互都需要用到副作用
 
-### 3.5 useContext
+## 3.6 useContext&createContext
 
-### 3.6 LazyLoad
+绕开父组件，直接从顶级组件传到子组件,实现跨级组件传值
 
-### 3.7 Suspense
+### 方法一：使用useContext来调用上下文
+
+```jsx
+// 1、创建上下文
+const NumContext = createContext();
+
+// 子组件
+function Count(){
+    // 3、绕过父组件调用上下文内容
+    const num = useContext(NumContext)
+    return (
+        <h3>{num}</h3>
+    )
+}
+
+ function Father(){
+     return <Count/>
+ }
+
+//顶级组件
+export default function App(){
+    const [num,setNum]=useState(0)
+    return(
+    <NumContext.Provider value={num}>
+            <Father/>
+     </NumContext.Provider>   
+    )
+}
+```
+
+### 方法二：使用Provider与Consumer
+
+```jsx
+function Child() {
+    
+    return(
+        <NumContext.Consumer>
+            {//用花括号是因为要结构出num和setNum
+                ({num,setNum})=>
+                (
+                    <>
+                    <h2>{num}</h2>
+                    <button onClick={()=>setNum()}>修改num</button>
+                    </>
+                )
+            }
+        </NumContext.Consumer>
+    )
+    
+}
+export default function App() {
+    const [num,setNum]=useState(123)
+    //提供给子组件用来修改num的函数
+    //直接放在共享空间里面
+   return(
+       <NumContext.Provider value={{num,setNum}}>
+           <Father />
+       </NumContext.Provider>
+   )
+  
+```
 
 
 
-## 第四章 React-Redux
+## 3.7 LazyLoad
+
+## 3.8 Suspense
+
+
+
+# 第四章 状态管理工具React-Redux
 
 Redux三大核心概念:
 
@@ -542,11 +713,27 @@ redux当中的reducer之所以被叫做reducer，是因为它与Array.prototype.
 
 ### 4.2 提供器与连接器
 
+在顶级组件的外层引入
+
+```jsx
+import {Provider}from 'react-redux'
+```
+
+在需要调用数据的组件中使用连接器
+
+```jsx
+import {connect} from 'react-redux'
+```
+
 ### 4.3 ReactRedux流程图
 
 ![img](https://tva1.sinaimg.cn/large/008eGmZEgy1gpp69hggimj30ya0i1tdp.jpg)
 
 
+
+# 第五章 路由
+
+用来管理url与视图之间的关系
 
 # 遇到的Bug（回忆版，原来写的老多忘保存...
 
