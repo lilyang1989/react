@@ -1,109 +1,18 @@
-标签很多属性
+## 为什么这样写？执行时机是什么？这样写的问题是什么？有没有更好的写法？
 
-## 我看了啥
+### 一些优化
 
+#### 1.requestIdleCallback
 
+可以通过在空闲的回调函数中使用requestIdleCallback(),来优化性能
 
-以及很多小视频
+```js
+requestIdleCallback(callback,[options])
+```
 
-## 我用到了什么
-
-ant-design  react-hooks  yarn
-
-需要用到的东西 webpack ajax   
-
-后缀可以写js也可以写jsx 
-
-各个组件放到app.js中时  以标签的形式放置  在属性中带着自己的方法
-
-关于ant design--在create react app中使用
-
-### 业务（？）逻辑梳理
-
-最大：app.js
-
-## 点击加号
-
-1.触发openInput
-
-2.openInput通过触发setInputShow将是否设置输入框isInputShow设置为是,
-
-3.addInput函数查询为isInputShow的值为true 展示输入框
-
-### 点击输入框
-
-1.查空，判断inputValue是否等于0
-
-2.输入要干的事情inputValue
-
-3.点击右边的新增，调用addItem把inputValue传进去，通过addItem父子传值
-
-4.todoList是一个数组，放入新的数组就会更新
-
-5.addItem包含dataItem和settodoList和setInputShow
-
-dataItem包含id content  completed。
-
-settodoList把todoList和dateItem合并在一起
-
-6.点击添加 要隐藏输入框 通过setInputShow置为false
-
-### 列表项
-
-1. 判断是否完成此待办事项,即checked还是非checked，通过data.completed来 判断
-2. 如果已完成，在textDecoration里面加上line-through
-3. span里绑定data.content
-4. div里放置三个button
-5. 放入app.js
-6. 在ul里进行map  
-
-### 数据存到localStorage里
-
-用useEffect
-
-1.从localstorage里用getItem取数据（todoData），将字符串转换为json对象，如果没有直接给一个空数组
-
-2.通过settoDoList把tododata放进去，让新的数据替换原来老的todoList的数据
-
-3.再写一个useEffect 使得当todoList变化时 localstorage存入todoData
-
-## 模态框组件model 插槽
-
-先解构出：isShowModal,modalTitle,children
-
-任何一个组件，先声明状态，是否显示？ isShowModal
-
-modal里面的类 inner
-
-model的标题m-header    里面嵌入modaltitle
-
-盒子content-wrapper里面放：
-
-model的内容：children 
-
-点击确定关闭框 closeModel
-
-## 关于提交数据
+options只有一个参数，timeout，表示超过这个时间后，如果任务还没执行，则强制执行，不必再等待空闲。
 
 
-
-## 完成与否与删除
-
-解构出 completedItem
-
-
-
-给checkBox加上这一属性
-
-再用usecallback
-
-#### 删除
-
-todoitem里解构出removeitem的
-
-
-
-组件化的特性就是通过属性去传递方法和数据
 
 # 第一章 一些前置知识
 
@@ -176,7 +85,7 @@ components:记录组件组成 profiler：记录网站性能
 
 > 组件从被创建到被销毁的过程。
 
-![image-20220609203931805](C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220609203931805.png)
+![image-20220617191329676](C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220617191329676.png)
 
 #### Mounting—出生
 
@@ -217,6 +126,8 @@ components:记录组件组成 profiler：记录网站性能
 ## 2.2 事件、state与setState
 
 把要更新的值都放在state里，更新数值用setState
+
+仅仅更改数值并不能在界面上直接显示出来，所以需要state
 
 ```jsx
 import React from 'react'
@@ -259,7 +170,81 @@ export default function App2() {
 
 ## 2.3受控组件与不受控组件
 
+#### 不受控组件：
+
+和组件本身state数据没有关系，所以不受组件管理
+
+#### 受控组件：
+
+表单元素的value值受组件state数据控制，表单中有onChange事件，可以在事件中对表单做实时验证，验证是否合法然后做相应操作
+
 ## 2.4 传值、父传子、子传父
+
+无论是父传子还是子传父，真正在做事的都是父组件，即使是子传父，也是父组件给子组件提供了一个方法来实现的。
+
+### 父传子
+
+以属性的形式传给组件即可
+
+```jsx
+let msg = "你好世界"
+
+export default function App(){
+    return <Sub msg={msg} />
+}
+
+// 子组件
+export default function Sub(props) {
+  return <h2>{props.msg}</h2>
+}
+```
+
+### 子传父
+
+```jsx
+export default function App(){
+    const fn = function(arg){
+        console.log(arg)	// 123
+    }
+    return <Sub msg={msg} fn={fn} />
+}
+
+// 子组件
+export default function Sub(props) {
+  return (
+      <>
+        <h2>{props.msg}</h2>
+        <button onClick={()=>props.fn(123)}>将123传递给父组件</button>
+      </>
+  )
+}
+```
+
+### this.state
+
+先在state里面定义 之后再使用
+
+```jsx
+// 定义状态数据：
+constructor(props){
+  super(props)
+
+  this.state = {
+    num: 20
+  }
+}
+
+// 使用状态数据：
+return (
+  <div>
+    <p>{this.state.num}</p>
+  </div>
+)
+```
+
+### this.props
+
+### 
 
 
 
@@ -436,11 +421,155 @@ const [state, dispatch] = useReducer(reducer, initState);
 
 ## 3.2 useRef
 
-使用useRef来获取某个组件或元素，返回一个dom对象。
+使用useRef来获取某个组件或元素，返回一个可变的 ref 对象。
 
 ref就是一个类似id的属性，用于获取dom元素
 
 本质上，useRef就是一个其.current属性保存着一个可变值“盒子”.
+
+### 3.21 Refs and the DOM
+
+>ref提供了一种方法允许我们访问DOM节点或在render方法中创建的React元素
+
+作用：提供一种不同于props的方式，在典型数据流之外强制修改子组件。
+
+#### 三种用法：
+
+* String类型（已过时）
+* 回调函数
+*  React.createRef() 
+
+#### String类型的ref有什么问题？
+
+<img src="C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220617192926995.png" alt="image-20220617192926995" style="zoom:150%;" />
+
+* 需要React追踪当前呈现的组件（不能猜测this），使React变慢。
+
+* 并不按照大多数人期待的“渲染回调模式”来运行，因为ref会被放置在 DataGrid上由于以上原因。
+
+  >渲染回调模式（React Render Callback Pattern）：
+  >
+  >将this.props.children当做函数来调用。
+  >
+  >数据表格（DataGrid）
+  >
+  >![image-20220617194929473](C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220617194929473.png)
+
+* 不可组合（composable）。
+
+#### 何时使用
+
+避免使用refs来做任何可以通过声明式实现来完成的事情。
+
+* 管理焦点，文本选择或媒体播放
+* 触发强制动画
+* 集成第三方DOM库
+
+#### 创建Refs
+
+通过ref属性附加到React元素
+
+```jsx
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef();//创建
+  }
+  render() {
+    return <div ref={this.myRef} />;//放进ref属性中
+  }
+}
+```
+
+#### 访问Refs
+
+被传递给render中元素时，可以在ref的current属性中被访问。
+
+```jsx
+const node =this.myRef.current
+```
+
+注意：不能在函数组件上使用ref属性，因为他们没有实例。
+
+但可以在函数组件内部使用ref属性，只要它指向一个DOM元素或class组件。
+
+```jsx
+function CustomTextInput(props){
+//必须声明 textInput  ref才可以引用它
+    const textInput=useRef(null);
+    function handleClick(){
+       textInput.current.focus();
+  }
+  return (
+    <div>
+      <input
+        type="text"
+        ref={textInput} />
+      <input
+        type="button"
+        value="Focus the text input"
+        onClick={handleClick}
+      />
+    </div>
+  );
+}
+```
+
+#### 回调Refs
+
+>可以更精细地控制何时refs被设置和接触。
+
+不同于createRef（）创建的ref属性，通过回调ref会传递一个函数。
+
+这个函数接受react组件实例或HTML DOM元素作为参数，使他们能在其他地方被存储和访问。
+
+例子：使用ref回调函数，在实例的属性中存储对DOM节点的引用。
+
+```jsx
+class CustomTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.textInput = null;
+
+    this.setTextInputRef = element => {
+      this.textInput = element;
+    };
+
+    this.focusTextInput = () => {
+      // 使用原生 DOM API 使 text 输入框获得焦点
+      if (this.textInput) this.textInput.focus();
+    };
+  }
+
+  componentDidMount() {
+    // 组件挂载后，让文本框自动获得焦点
+    this.focusTextInput();
+  }
+
+  render() {
+    // 使用 `ref` 的回调函数将 text 输入框 DOM 节点的引用存储到 React
+    // 实例上（比如 this.textInput）
+    return (
+      <div>
+        <input
+          type="text"
+          ref={this.setTextInputRef}
+        />
+        <input
+          type="button"
+          value="Focus the text input"
+          onClick={this.focusTextInput}
+        />
+      </div>
+    );
+  }
+}
+```
+
+React在组件挂载时，会调用ref回调函数并传入DOM元素，当卸载时调用它并传入null。
+
+在componentDidMount或componentDidUpdate触发前，React会保证refs一定是最新的。
 
 ```jsx
 import {useRef} from 'react'
@@ -449,7 +578,7 @@ function App5(){
     const element = useRef(null)
 
     const handleClick = () => {
-        console.log(element.current)    		// 获取input
+        console.log(element.current.)    		// 获取input
         console.log(element.current.value)  // 获取到input中的值
         
     }
@@ -531,6 +660,8 @@ const doSth=useCallback(()=>{setNum(num=>num+1)
 返回的函数a会根据b的变化而变化，如果b始终未发生变化，a也不会生成，避免在不必要的情况下更新
 
 情景：通过属性传递给子组件
+
+比如一个父组件中
 
 ```jsx
 const a = useCallback(() => {
@@ -621,7 +752,57 @@ useEffect(callback,array)
 
 即和外部变量的交互都需要用到副作用
 
-## 3.6 useContext&createContext
+### 3.51 useEffect&useLayoutEffect
+
+#### 差异：
+
+* useEffect是异步执行的，而useLayoutEffect是同步执行的
+* useEffect执行时机是浏览器完成渲染之后，而useLayoutEffect执行时机是浏览器把内容真正渲染到界面之前同步执行，和componentDidMount等价
+
+一个例子
+
+```jsx
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+export default  function App() {
+  const [state, setState] = useState("hello world")
+
+  useEffect(() => {
+    let i = 0;
+    while(i <= 100000000) {
+      i++;
+    };
+    setState("world hello");
+  }, []);
+
+  // useLayoutEffect(() => {
+  //   let i = 0;
+  //   while(i <= 100000000) {
+  //     i++;
+  //   };
+  //   setState("world hello");
+  // }, []);
+
+  return (
+    <>
+      <div>{state}</div>
+    </>
+  );
+}
+```
+
+如果是用useEffect，点击刷新后会先闪烁一下helloworld然后再变成helloworld，而换成useLayoutEffect之后闪烁现象就会消失
+
+所以最好把操作dom相关的操作放到useLayoutEffect中去，避免导致闪烁。
+
+* 优先使用useEffect，因为它是异步执行的，不会阻塞渲染
+
+* 会影响渲染的操作尽量放到useLayoutEffect中去，避免闪烁问题
+* useLayoutEffect和componentDidMount是等价的，会同步调用，阻塞渲染
+
+## 3.6useContext&createContext
 
 绕开父组件，直接从顶级组件传到子组件,实现跨级组件传值
 
@@ -697,11 +878,24 @@ export default function App() {
 
 # 第四章 状态管理工具React-Redux
 
+>只有遇到 React 实在解决不了的问题，你才需要 Redux
+>
+>​                                                                                      ——Dan Abramov
+
 Redux三大核心概念:
 
 * Action
 * Reducer
 * Store
+
+## 4.1 Redux使用场景
+
+* 不同身份的用户有不同的使用方式
+* 某个组件的状态需要共享
+* 某个状态需要在任何地方都可以看到
+* 一个组件需要改变全局状态
+
+
 
 ### Why is a Redux reducer called a reducer?
 
@@ -735,7 +929,106 @@ import {connect} from 'react-redux'
 
 用来管理url与视图之间的关系
 
-# 遇到的Bug（回忆版，原来写的老多忘保存...
+## 5.1路由原理
+
+ 1、准备视图(html)
+
+ 2、准备路由的路线(可以是一个对象，键名是路线名称和值是视图地址)
+
+ 3、通过hash地址的路线，获取“视图地址”
+
+ 4、在指定标签中，加载需要的视图页面
+
+## 5.2React-router-dom
+
+两种模式 BrowserRouter(History模式)和 HashRouter（hash模式） 所有路由都必须放在这两种里面
+
+```jsx
+const BaseRouter=()=>{
+    return(
+      <BrowserRouter>
+       <Routes>
+       <Route path="/"element={<App/>}>
+           <Route path="//src/pages/home.jsx" element={<home/>}></Route>
+           <Route path="//src/pages/list.jsx" element={<list/>}></Route>
+           <Route path="//src/pages/detail.jsx" element={<detail/>}></Route>
+           
+       </Route>
+       <Route path="*" element={<Error/>}></Route>   
+       </Routes>
+       
+      </BrowserRouter>
+    )//让整个界面显示404  route与routes同级
+}
+```
+
+定义一个路由，每一个路由就是一个route标签，所有Route放在Routes
+
+#### 跳转
+
+在react-router-dom中用link标签代替
+
+## 5.3涉及到的hooks
+
+#### useSearchParams
+
+用于读取和修改当前位置的url中的查询字符串‘
+
+返回包含两个值的数组，内容分别为：当前的search参数，更新的search参数
+
+```jsx
+import {useSearchParams} from 'react-router-dom'
+export default function Detail(){
+    const [search,setSearch]=useSearchParams()
+    const id=search.get('id')
+    const title=search.get('title')
+    const content=search.get('content')
+return(
+	<ul>
+        <li>
+            <button onClick={()=>setSearch('id=008&title=hhh&content&123')}>点我更新</button>
+        </li>
+        <li>编号:{id}</li>
+        <li>标题:{title}</li>
+        <li>内容:{content}</li>
+    </ul>   
+)
+  }
+```
+
+#### useLocation
+
+可以获取当前地址栏的路径
+
+```jsx
+let {pathname}=useLocation()
+```
+
+#### useNavigate
+
+使用这个路由hook可以实现路由跳转。
+
+```jsx
+export default function App99() {
+    const location=useLocation()
+    const navigate=useNavigate()
+    console.log(location.pathname)
+    }
+//跳转详情页
+const goDetail=()=>{
+    navigate('/src/pages/detail.jsx',{
+        state:{username:"张三"}
+    })
+}
+```
+
+#### useParams
+
+用于返回当前匹配路由的params参数
+
+
+
+#  遇到的Bug（回忆版，原来写的老多忘保存...
 
 ## 最长、最折磨
 
@@ -767,11 +1060,11 @@ todoList is not inheritale
 
 用源码覆盖后依然出现问题，思考可能不是代码的问题：
 
-1.依赖库的版本？
+### 1.依赖库的版本？
 
 很快就排除了，scss、boostrap和yarn都是安的最新的，Google了下很快排除了
 
-2.浏览器的原因？
+### 2.浏览器的原因？
 
 一点点查，发现加的数据无法在localstorage里存储，这时恰好断网，看了眼梯子发现挂了
 
@@ -787,9 +1080,9 @@ todoList is not inheritale
 
 ![image-20220613174929938](C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220613174929938.png)
 
-关键视图改动
+一个视图改动
 
-
+localhost3000之后的都没问题
 
 ## 引入Ant-design
 
