@@ -121,7 +121,33 @@ components:记录组件组成 profiler：记录网站性能
 >
 >只有在挂载的时候才能发出通知，相当于只有在活着的时候才能说话 
 
+具体过程：
 
+1.初始化阶段
+
+componentWillMount：render修改之前最后一次修改状态的机会，在此阶段做一些状态的初始化，状态的定义，拿不到真实的DOM节点
+
+>React16之后已经不推荐使用，需要在前面加上UNSAFE_或直接不用，把该放的放到constructor或DidMount中去
+
+##### 原因：ReactFiber
+
+通过 React 的 Diff 算法比较旧虚拟 DOM 树和新虚拟 DOM 树之间的 Change ，然后批处理这些改变
+
+
+
+WillMount任务优先级比较低（找哪些节点挂载到界面中），有可能会被高优先级（render、
+
+DidMount
+
+   ）任务打断，打断之后会重新再执行一次，执行次数多了就失去了唯一性，不够安全
+
+componentDidMount：
+
+成功render并渲染完成真实DOM之后触发，可以修改DOM
+
+用来放一些请求，订阅函数调用，setInterval，基于创建完的dom进行初始化
+
+render：只能访问this.props和this.state,不允许修改状态和DOM输出
 
 ## 2.2 事件、state与setState
 
