@@ -16,11 +16,11 @@ options只有一个参数，timeout，表示超过这个时间后，如果任务
 
 # 第一章 一些前置知识
 
-* babel 能将jsx转成js
+* babel ：能将jsx转成js
 
 * react development是react的核心
 
-* react-dom  react扩展库
+* react-dom：react渲染在不同平台所需要的核心代码
 
 * 只有先引入核心库才能引入扩展库
 
@@ -129,15 +129,57 @@ componentWillMount：render修改之前最后一次修改状态的机会，在�
 
 >React16之后已经不推荐使用，需要在前面加上UNSAFE_或直接不用，把该放的放到constructor或DidMount中去
 
-##### 原因：ReactFiber
+### Why?
 
->根据浏览器每一帧执行的特性，构思出了Finer来将一次任务拆解成单元，以划分时间片的方式，按照FIber的自己的调度方法，根据任务单元优先级，分批处理，将一次更新分散在多次时间片中。
+需要递归比对虚拟DOM树，找出需要变动的节点，然后同步更新他们，会占据浏览器资源，掉帧，用户感觉到卡顿
+
+##### 解决办法：ReactFiber（纤维，协程或纤程）
+
+和线程不同，本身没有并发或并行能力，只是一种控制流程的让出机制，让出CPU的执行权，让CPU去干别的事情，渲染的过程可以被中断，控制权交回浏览器让位高优先级的任务，空闲后再恢复渲染。
+
+>根据浏览器每一帧执行的特性，构思出了Fiber来将一次任务拆解成单元，以划分时间片的方式，按照Fiber的自己的调度方法，根据任务单元优先级，分批处理，将一次更新分散在多次时间片中。
+>
+>适度的让出CPU执行权，除了让浏览器及时响应交互，还有其他好处
+>
+>* 分批延迟操作DOM
+>
+>* 让浏览器适度休息，对代码进行编译优化以及热代码优化，或者对reflow进行修正
+>
+>  ![image-20220621225200707](C:\Users\Yang\AppData\Roaming\Typora\typora-user-images\image-20220621225200707.png)
 >
 >另外，浏览器空闲的时候，也可以继续去执行未完成的任务，充分利用浏览器每一帧的工作特性。
 
 ![img](https://pic3.zhimg.com/80/v2-398077dda18dd8a2055dc21c442e39e6_720w.jpg)
 
 通过 React 的 Diff 算法比较旧虚拟 DOM 树和新虚拟 DOM 树之间的 Change ，然后批处理这些改变
+
+#### 1.Fiber干了啥？
+
+react在render第一次渲染时，会通过React.createElement创建一颗Element树**Virtual DOM Tree**,同时基于**Virtual DOM Tree**创建一个结构相同的FiberTree
+
+> Virtual DOM Tree 虚拟 DOM 树
+> 虚拟 DOM 树的存在就是为了解决 js 直接操作真实 DOM 而引起的计算机计算能力的浪费。
+> 因为通过 js 直接修改 DOM ，会引起整颗 DOM 树计算和改变，而虚拟 DOM 树的存在可以让真实 DOM 只改变必要改变的部分。
+
+FiberTree是由FiberNode构成的，更像是一个单链表构成的树，便于向上、向下、向兄弟节点转换
+
+### ![img](https://pic4.zhimg.com/80/v2-cfaea6c0e9362b3701b1cf342ed4588b_720w.jpg)
+
+组件树和fiber树结构对应，一个组件实例有一个对应的fiber实例、
+
+Fiber负责整个应用层面的调和，fiber实例负责组件的调和。
+
+#### 2.规定调度顺序：expirationTime到期时间
+
+每个FiberNode都会有一个ExpirationTime到期时间来确定当前时间片是否执行该节点的更新任务。
+
+##### 到期时间越短，优先级越高。
+
+>为了防止某个Update因为优先级的原因一直被打断而未能执行。React会设置一个ExpirationTime，如果到了这个时间某个Update还未执行的话，React将会强制执行该update，这就是ExpirationTime的作用。
+
+每一次update之前检查
+
+
 
 
 
@@ -275,8 +317,6 @@ return (
 ### this.props
 
 ### 
-
-
 
 # 第三章 React Hooks
 
@@ -1121,3 +1161,19 @@ localhost3000之后的都没问题
  
 
 ​                                                          	
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 参考：
+
+[「2021」高频前端面试题汇总之React篇（上）](https://juejin.cn/post/6941546135827775525#heading-6)
