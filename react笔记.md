@@ -153,6 +153,58 @@ componentWillMount：render修改之前最后一次修改状态的机会，在�
 
 通过 React 的 Diff 算法比较旧虚拟 DOM 树和新虚拟 DOM 树之间的 Change ，然后批处理这些改变
 
+通过一个例子了解[Fiber](https://www.solidjs.com/examples/suspensetabs)，可以看到点击切换后先呈现内容后展示切换动画，说明先把优先级高的内容呈现出来，不要让用户等待时间过长（loading界面）。
+
+```jsx
+import { createSignal, Suspense, Switch, Match, useTransition } from "solid-js";
+import { render } from "solid-js/web";
+import Child from "./child";
+
+import "./styles.css";
+
+const App = () => {
+  const [tab, setTab] = createSignal(0);
+  const [pending, start] = useTransition();
+  const updateTab = (index) => () => start(() => setTab(index));
+
+  return (
+    <>
+      <ul class="inline">
+        <li classList={{ selected: tab() === 0 }} onClick={updateTab(0)}>
+          Uno
+        </li>
+        <li classList={{ selected: tab() === 1 }} onClick={updateTab(1)}>
+          Dos
+        </li>
+        <li classList={{ selected: tab() === 2 }} onClick={updateTab(2)}>
+          Tres
+        </li>
+      </ul>
+      <div class="tab" classList={{ pending: pending() }}>
+        <Suspense fallback={<div class="loader">Loading...</div>}>
+          <Switch>
+            <Match when={tab() === 0}>
+              <Child page="Uno" />
+            </Match>
+            <Match when={tab() === 1}>
+              <Child page="Dos" />
+            </Match>
+            <Match when={tab() === 2}>
+              <Child page="Tres" />
+            </Match>
+          </Switch>
+        </Suspense>
+      </div>
+    </>
+  );
+};
+
+render(App, document.getElementById("app"));
+
+```
+
+
+
 #### 1.Fiber干了啥？
 
 react在render第一次渲染时，会通过React.createElement创建一颗Element树**Virtual DOM Tree**,同时基于**Virtual DOM Tree**创建一个结构相同的FiberTree
@@ -944,6 +996,20 @@ export default function App() {
 
 ## 3.8 Suspense
 
+## 3.9 use Transition
+
+默认情况下，认为React中所有的更新都是紧急的，也就是说所有优先级相同，这样的话会导致一个问题：快速更新被大量更新拖慢速度
+
+从React18中新增特性concurrency之后，可以将某些更新标记为可中断的和非紧急的，也就是所谓的transitions，将紧急任务的更新和非紧急任务的渲染区分开了。
+
+```jsx
+const [isPending,startTransition]=useTransition();
+```
+
+返回一个具有两个成员的数组：
+
+isPending:指明这个transition正在加载中
+
 
 
 # 第四章 状态管理工具React-Redux
@@ -1177,3 +1243,7 @@ localhost3000之后的都没问题
 # 参考：
 
 [「2021」高频前端面试题汇总之React篇（上）](https://juejin.cn/post/6941546135827775525#heading-6)
+
+[React 18新特性优先看之初探useTransition()](https://juejin.cn/post/7020621789172613157)
+
+[React技术揭秘](https://react.iamkasong.com/#fiber)
